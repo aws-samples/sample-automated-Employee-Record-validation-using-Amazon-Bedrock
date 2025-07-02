@@ -1,0 +1,108 @@
+openapi: 3.0.0
+info:
+  title: CheckUpdateValue
+  version: 1.0.0
+  description: API that identifies and updates empty values in DynamoDB records
+
+# Added security definitions
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+# Added global security requirement
+security:
+  - BearerAuth: []
+
+paths:
+  "/checkUpdateBlog-lambda-function/{name}":
+    get:
+      summary: Get user attributes and identify empty fields
+      description: Retrieves all attributes for the specified name and identifies missing values
+      operationId: getNameAttributes
+      parameters:
+      - name: name
+        in: path
+        description: Name of the user to check for missing values
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully retrieved user attributes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [SUCCESS, NOT_FOUND]
+                  name:
+                    type: string
+                  empty_attributes:
+                    type: array
+                    maxItems: 20
+                    items:
+                      type: string
+                  current_values:
+                    type: object
+                    additionalProperties: true
+    
+    post:
+      summary: Update empty attribute value
+      description: Updates the value of a specified empty attribute
+      operationId: updateEmptyAttribute
+      parameters:
+      - name: name
+        in: path
+        description: Name of the user to update
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                attribute_name:
+                  type: string
+                  description: Name of the attribute to update
+                attribute_value:
+                  type: string
+                  description: New value for the attribute
+              required:
+                - attribute_name
+                - attribute_value
+      responses:
+        '200':
+          description: Successfully updated attribute
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [SUCCESS, ERROR]
+                  message:
+                    type: string
+                  updated_values:
+                    type: object
+                    additionalProperties: true
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [ERROR]
+                  message:
+                    type: string

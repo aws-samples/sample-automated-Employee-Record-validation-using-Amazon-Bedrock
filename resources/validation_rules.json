@@ -1,0 +1,28 @@
+{
+  "attributes": {
+    "Age": {
+      "type": "numeric",
+      "allowed_values": "18-100",
+      "example": "25",
+      "pattern": "^[1-9][0-9]?$|^100$"
+    },
+    "Surname": {
+      "type": "string",
+      "allowed_values": "any text",
+      "example": "Smith",
+      "pattern": "^[A-Za-z]+$"
+    },
+    "ID": {
+      "type": "numeric",
+      "allowed_values": "1-1000",
+      "example": "500",
+      "pattern": "^[1-9][0-9]{0,3}$"
+    },
+    "Status": {
+      "type": "string",
+      "allowed_values": ["Active", "Inactive", "Pending"],
+      "example": "Active",
+      "pattern": "^(Active|Inactive|Pending)$"
+    }
+  }
+}
